@@ -7,3 +7,5 @@ def XOR(b1,b2):
     return res
 def RoL(cle,n):
     return (cle << n) & 0xFFFF  | (cle >> 16 - n)
+def Comparer(b1,b2):
+    return sum([b1[i] !=b2[i] for i in range(8)])

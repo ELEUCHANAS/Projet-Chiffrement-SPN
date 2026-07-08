@@ -76,9 +76,9 @@ def dechiffrer(msg_crypte,cle,cin):
         case 2: # Sortie binaire
             return ''.join(format(b, '08b') for b in decrypted_msg)
 # Encrypt UTF-8 string, output hex
-cipher_hex = chiffrer("5bFF6777", 0b1100101010010101, 1)
+cipher_hex = chiffrer("10", 0b1100101010010101, 2)
 print("Cipher (hex):", cipher_hex)
 
 # Decrypt hex ciphertext, output UTF-8 string
-plain_text = dechiffrer(cipher_hex, 0b1100101010010101, 1)
+plain_text = dechiffrer(cipher_hex, 0b1100101010010101, 2)
 print("Plaintext (UTF-8):", plain_text)
