@@ -15,6 +15,7 @@ def Calcul_Effet_Avalanche():
             Y.append(Comparer(C1,C2))
         plt.subplot(3,2,j+1)
         plt.bar(range(8),Y)
+        plt.yticks(range(0, 9))
         plt.xlabel("Bit modifié")
         plt.ylabel("Bits différents")
         plt.title(f"Bloc {j}: {blocs[j]}")
