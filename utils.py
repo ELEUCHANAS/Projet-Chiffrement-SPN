@@ -13,7 +13,7 @@ def Comparer(b1,b2):
 def is_binary(b,n = None):
     try:
         int(b, 2)
-    except ValueError:
+    except Exception:
         return False
     if n is not None and len(b) != n:
         return False
