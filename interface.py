@@ -108,6 +108,12 @@ def Init_Attack_Frame(win):
     global Attack_KeyFound_res
     global Attack_Exectime_res
     global Attack_Percent_label
+    global Attack_Debit_label
+    global Attack_Debit_res
+    global Attack_V32_label
+    global Attack_V32_res
+    global Attack_V64_label
+    global Attack_V64_res
     Attack_frame = tk.Frame(win,borderwidth=3)
     Attack_title_label = tk.Label(Attack_frame,text="Brute force attack")
     Attack_Plaintext_label = tk.Label(Attack_frame,text="PlainText : ")
@@ -121,6 +127,12 @@ def Init_Attack_Frame(win):
     Attack_Exectime_label = tk.Label(Attack_frame,text="Execution Time : ")
     Attack_KeyFound_res = tk.Label(Attack_frame,text="")
     Attack_Exectime_res = tk.Label(Attack_frame,text="")
+    Attack_Debit_label = tk.Label(Attack_frame,text="Débit (clés/sec) : ")
+    Attack_Debit_res = tk.Label(Attack_frame,text="")
+    Attack_V32_label = tk.Label(Attack_frame,text="Temps estimé 32 bits : ")
+    Attack_V32_res = tk.Label(Attack_frame,text="")
+    Attack_V64_label = tk.Label(Attack_frame,text="Temps estimé 64 bits : ")
+    Attack_V64_res = tk.Label(Attack_frame,text="")
     Attack_title_label.grid(row=0, column=0, columnspan=2, pady=(0, 10))
     Attack_Plaintext_label.grid(row=1, column=0, sticky="e", padx=5, pady=5)
     Attack_Plaintext_Entry.grid(row=1, column=1, padx=5, pady=5)
@@ -133,6 +145,12 @@ def Init_Attack_Frame(win):
     Attack_KeyFound_res.grid(row=5, column=1, sticky="w", pady=5)
     Attack_Exectime_label.grid(row=6, column=0, sticky="e", pady=5)
     Attack_Exectime_res.grid(row=6, column=1, sticky="w", pady=5)
+    Attack_Debit_label.grid(row=7, column=0, sticky="e", pady=5)
+    Attack_Debit_res.grid(row=7, column=1, sticky="w", pady=5)
+    Attack_V32_label.grid(row=8, column=0, sticky="e", pady=5)
+    Attack_V32_res.grid(row=8, column=1, sticky="w", pady=5)
+    Attack_V64_label.grid(row=9, column=0, sticky="e", pady=5)
+    Attack_V64_res.grid(row=9, column=1, sticky="w", pady=5)
     Attack_frame.grid(row=2, column=2, padx=15, pady=15, sticky="nsew")
 def Gui_Encrypt(event=None):
     """
@@ -214,11 +232,20 @@ def Gui_Attack(event=None):
         messagebox.showerror("Erreur","Please provide a valide plaintext or ciphertext")
         return
     t = res[0]
-    Attack_Exectime_res.config(text=f"{t:.3f}")
+    Attack_Exectime_res.config(text=f"{t:.3f} sec")
     if  isinstance(res[1], int):
         Attack_KeyFound_res.config(text=str(format(res[1],"016b")))
+        debit = res[2]
+        v32 = res[3]
+        v64 = res[4]
+        Attack_Debit_res.config(text=f"{debit:.2f} clés/sec")
+        Attack_V32_res.config(text=f"{v32:.2e} sec")
+        Attack_V64_res.config(text=f"{v64:.2e} sec")
     else:
         Attack_KeyFound_res.config(text=res[1])
+        Attack_Debit_res.config(text="")
+        Attack_V32_res.config(text="")
+        Attack_V64_res.config(text="")
 def Gui_Analysis(eveny=None):
     """
     Fonction déclenchée par le bouton Run Avalanche Test.
@@ -235,7 +262,7 @@ def Init_Gui():
     """
     window = tk.Tk()
     window.title("SPN Cipher")
-    window.minsize(800, 600)
+    window.minsize(900, 700)
     Init_Encrypt_Frame(window)
     Init_sep(window)
     Init_Analysis_Frame(window)
