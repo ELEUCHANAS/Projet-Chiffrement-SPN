@@ -6,6 +6,10 @@ from analysis import Calcul_Effet_Avalanche
 from utils import is_binary,is_Hex,is_base64
 
 def Init_Encrypt_Frame(win):
+    """
+    Initialise la frame de chiffrement.
+    Contient : champ texte, champ clé, choix du type d'entrée, bouton Encrypt.
+    """
     global Encrypt_box
     global Encrypt_Plaintext_Entry
     global Encrypt_Key_Entry
@@ -31,6 +35,10 @@ def Init_Encrypt_Frame(win):
     Encrypt_Ciphertext_label.grid(row=5, column=0, columnspan=2, pady=10)
     Encrypt_frame.grid(row=0, column=0, padx=15, pady=15, sticky="nsew")
 def Init_Decrypt_Frame(win):
+    """
+    Initialise la frame de dechiffrement.
+    Contient : champ texte chiffre, champ clé, choix du type d'entrée, bouton Decrypt.
+    """
     global Decrypt_box
     global Decrypt_CipherText_Entry
     global Decrypt_Key_Entry
@@ -54,8 +62,14 @@ def Init_Decrypt_Frame(win):
     Decrypt_box.grid(row=3, column=1, padx=5, pady=5)
     Decrypt_Bouton.grid(row=4, column=0, columnspan=2, pady=10)
     Decrypt_Plaintext_label.grid(row=5, column=0, columnspan=2, pady=10)
-    Decrypt_frame.grid(row=0, column=2, padx=15, pady=15, sticky="nsew")
+    Decrypt_frame.grid(row=0, column=2, padx=15, pady=15, sticky="n")
 def Init_sep(win):
+    """
+    Initialise les séparateurs de la fenêtre principale.
+    - Configure la grille (colonnes et lignes avec poids)
+    - Ajoute un séparateur vertical entre les colonnes
+    - Ajoute un séparateur horizontal entre les lignes
+    """
     win.columnconfigure(0, weight=1)
     win.columnconfigure(1, weight=1)
     win.columnconfigure(2, weight=1)
@@ -66,6 +80,10 @@ def Init_sep(win):
     separator_h = ttk.Separator(win, orient="horizontal")
     separator_h.grid(row=1, column=0,columnspan=3, sticky="ew")
 def Init_Analysis_Frame(win):
+    """
+    Initialise la frame de Analyse.
+    Contient : un titre ("Security Analysis"), un bouton pour lancer le test d'avalanche, une zone d'affichage des résultats
+    """
     global Analysis_results_box
     Analysis_frame = tk.Frame(win,borderwidth=3)
     Analysis_Title = tk.Label(Analysis_frame,text="Security Analysis")
@@ -76,8 +94,12 @@ def Init_Analysis_Frame(win):
     Analysis_Avalanche.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
     Analysis_results_label.grid(row=2, column=0, sticky="w", pady=(10, 0))
     Analysis_results_box.grid(row=3, column=0, columnspan=2, padx=5, pady=5)
-    Analysis_frame.grid(row=2, column=0, padx=15, pady=15, sticky="nsew")
+    Analysis_frame.grid(row=2, column=0, padx=15, pady=15, sticky="n")
 def Init_Attack_Frame(win):
+    """
+    Initialise la frame de Analyse.
+    Contient : champ texte clair, champ texte chiffré, champ clé, choix du type d'entrée, bouton pour lancer l'attaque, barre de progression avec pourcentage, affichage de la clé trouvée et du temps d'exécution.
+    """
     global Attack_Plaintext_Entry
     global Attack_CipherText_Entry
     global Attack_ProgressBar
@@ -113,6 +135,12 @@ def Init_Attack_Frame(win):
     Attack_Exectime_res.grid(row=6, column=1, sticky="w", pady=5)
     Attack_frame.grid(row=2, column=2, padx=15, pady=15, sticky="nsew")
 def Gui_Encrypt(event=None):
+    """
+    Fonction déclenchée par le bouton Encrypt.
+    - Vérifie le type d'entrée choisi
+    - Valide la clé (16 bits binaire)
+    - Lance le chiffrement et affiche le résultat
+    """
     choice = Encrypt_box.get()
     key = Encrypt_Key_Entry.get()
     msg = Encrypt_Plaintext_Entry.get()
@@ -137,6 +165,12 @@ def Gui_Encrypt(event=None):
                 return
     Encrypt_Ciphertext_label.config(text=str(chiffrer(msg,int(key,2),cin)))
 def Gui_Decrypt(event=None):
+    """
+    Fonction déclenchée par le bouton Decrypt.
+    - Vérifie le type d'entrée choisi (Hex, base64, Binaire)
+    - Valide la clé (16 bits binaire)
+    - Lance le déchiffrement et affiche le résultat
+    """
     choice = Decrypt_box.get()
     key = Decrypt_Key_Entry.get()
     msg = Decrypt_CipherText_Entry.get()
@@ -164,12 +198,21 @@ def Gui_Decrypt(event=None):
                 return
     Decrypt_Plaintext_label.config(text=str(dechiffrer(msg,int(key,2),cin)))
 def Gui_Attack(event=None):
+    """
+    Fonction déclenchée par le bouton Start Brute Force Attack.
+    - Vérifie la présence du texte clair et du texte chiffré
+    - Lance l'attaque par force brute
+    - Met à jour la barre de progression, le temps d'exécution et la clé trouvée
+    """
     plaintext = Attack_Plaintext_Entry.get()
     ciphertext = Attack_CipherText_Entry.get()
     if not plaintext or not ciphertext :
         messagebox.showerror("Erreur","Please provide a plaintext or/and ciphertext")
         return
     res = brute_force(plaintext,ciphertext,Attack_ProgressBar,Attack_Percent_label)
+    if res == -1:
+        messagebox.showerror("Erreur","Please provide a valide plaintext or ciphertext")
+        return
     t = res[0]
     Attack_Exectime_res.config(text=f"{t:.3f}")
     if  isinstance(res[1], int):
@@ -177,11 +220,22 @@ def Gui_Attack(event=None):
     else:
         Attack_KeyFound_res.config(text=res[1])
 def Gui_Analysis(eveny=None):
+    """
+    Fonction déclenchée par le bouton Run Avalanche Test.
+    - Exécute le test d'avalanche
+    - Affiche les résultats dans la zone prévue
+    """
     Analysis_results_box.config(text=Calcul_Effet_Avalanche())
 def Init_Gui():
+    """
+    Initialise la fenêtre principale de l'application SPN Cipher.
+    - Configure la taille et le titre
+    - Ajoute les différentes frames (chiffrement, déchiffrement, analyse, attaque brute force)
+    - Lance la boucle principale Tkinter
+    """
     window = tk.Tk()
     window.title("SPN Cipher")
-    window.minsize(600, 600)
+    window.minsize(800, 600)
     Init_Encrypt_Frame(window)
     Init_sep(window)
     Init_Analysis_Frame(window)
